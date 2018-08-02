@@ -1,4 +1,4 @@
-# 使用ansible对linux服务器远程批量初始化脚本
+# 使用ansible对centos服务器远程批量初始化脚本
 
 ## 一、安装ansible
 ```
