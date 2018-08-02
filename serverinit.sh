@@ -28,27 +28,27 @@ EOF
 } 
 
 diskmount(){
-disknum=$(fdisk -l| grep "Disk /dev"|awk '$3>100{print $2} '|cut -d ":" -f 1|wc -w)
+disknum=$(fdisk -l| grep "/dev"|grep -v "/dev/vda"|grep "GB"|awk '{print $2}'|cut -d "：" -f 2|awk '$1>90{print $1}'|wc -w)
 if [ "$disknum" == "0" ]
-	then 
+	then
 		echo "that's no disk need mount" >> /tmp/guang.log
 elif [ "$disknum" == "1" ]
-	then 
+	then
 		echo "one disk need to mount" >> /tmp/guang.log
-		onedisk=$(fdisk -l| grep "Disk /dev"|awk '$3>100{print $2} '|cut -d ":" -f 1|sed -n '1p')
+		onedisk=$(fdisk -l| grep "/dev"|grep -v "/dev/vda"|grep "GB"|awk '{print $2}'|cut -d "：" -f 1|sed -n '1p')
 		mkdir /system
 		mkfs.ext4 $onedisk
 		sleep 5
 		echo "onedisk formatting ok ">>/tmp/guang.log
 		echo $onedisk ' /system ext4    defaults    0  0' >> /etc/fstab
 		mount -a
-		chown $USER:$USER -R /system
+		chown tongxin:tongxin -R /system
 		echo -e '\E[32m'"onedisk mount ok">>/tmp/guang.log
 elif [ "$disknum" == "2" ]
-	then 
+	then
 		echo "two disks need to mount" >> /tmp/guang.log
-                onedisk=$(fdisk -l| grep "Disk /dev/vd"|awk '$3>100{print $2} '|cut -d ":" -f 1|sed -n '1p')
-		twodisk=$(fdisk -l| grep "Disk /dev/vd"|awk '$3>100{print $2} '|cut -d ":" -f 1|sed -n '2p')
+		onedisk=$(fdisk -l| grep "/dev"|grep -v "/dev/vda"|grep "GB"|awk '{print $2}'|cut -d "：" -f 1|sed -n '1p')
+		twodisk=$(fdisk -l| grep "/dev"|grep -v "/dev/vda"|grep "GB"|awk '{print $2}'|cut -d "：" -f 1|sed -n '2p')
                 mkdir /{system,docker}
                 mkfs.ext4 $onedisk
                 sleep 5
@@ -58,11 +58,11 @@ elif [ "$disknum" == "2" ]
                 echo $onedisk ' /system ext4    defaults    0  0' >> /etc/fstab
                 echo $twodisk ' /docker ext4    defaults    0  0' >> /etc/fstab
                 mount -a
-                chown $USER:$USER -R /system
-                chown $USER:$USER -R /docker
+                chown tongxin:tongxin -R /system
+                chown tongxin:tongxin -R /docker
                 echo -e '\E[32m'"twodisks mount ok">>/tmp/guang.log
 
-else 	
+else
 		echo "the disks more then two .please look look"
 fi
 }
