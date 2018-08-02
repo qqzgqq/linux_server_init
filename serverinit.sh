@@ -1,7 +1,7 @@
 #!/bin/bash
 #author zengguang 
 #date 2017-09-01 17:49:01
-#describe serverinit script
+#describe serverinit script :)
 
 USER=user
 usergroup(){
